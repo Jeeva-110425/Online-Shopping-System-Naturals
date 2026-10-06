@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Naturals – Biodegradable products</title>
+  <meta name="description" content="Naturals offers biodegradable home, kitchen, and lifestyle essentials made for a lighter footprint.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav-shell">
+      <a class="logo" href="#">Naturals</a>
+      <nav class="nav">
+        <span id="who"></span>
+        <button class="link" id="authBtn">Log in</button>
+        <button class="link" id="ordersBtn" hidden>My orders</button>
+        <button class="cartBtn" id="cartBtn">Cart <b id="count">0</b></button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero container">
+    <div class="hero-copy">
+      <span class="eyebrow">Nature-made essentials</span>
+      <h1>Everyday things that return to the soil.</h1>
+      <p>Plates, brushes, bags and wraps made from bamboo, jute, coir and leaves. Beautiful, useful, and kinder to the planet.</p>
+      <div class="hero-actions">
+        <button class="primary" id="shopNowBtn">Shop now</button>
+        <button class="plain" id="featuredBtn">Trending picks</button>
+      </div>
+      <div class="trust-row">
+        <span>4.9/5 rating</span>
+        <span>Free shipping over ₹799</span>
+        <span>Plastic-free delivery</span>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="mini-card">
+        <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80" alt="Eco sustainable home products" />
+      </div>
+      <div class="mini-stats">
+        <strong>12k+</strong>
+        <span>happy homes</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="container main-shell">
+    <div class="shop-tools">
+      <div class="filters" id="filters"></div>
+      <div class="utility-box">
+        <label for="searchInput">Search</label>
+        <input id="searchInput" type="search" placeholder="Search products" />
+      </div>
+      <div class="utility-box">
+        <label for="sortSelect">Sort</label>
+        <select id="sortSelect">
+          <option value="featured">Featured</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
+          <option value="rating">Top rated</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <section class="feature-wrap">
+    <div class="container feature-grid">
+      <div class="feature-intro">
+        <span class="eyebrow">Why Naturals</span>
+        <h2>Built with the planet in mind.</h2>
+      </div>
+      <div class="feature-cards">
+        <article class="feature-card">
+          <strong>01</strong>
+          <h3>100% biodegradable</h3>
+          <p>Products made to break down naturally and return to the earth without leaving toxic residue.</p>
+        </article>
+        <article class="feature-card">
+          <strong>02</strong>
+          <h3>Thoughtful design</h3>
+          <p>Every item is created to feel simple, useful and beautiful in your everyday routine.</p>
+        </article>
+        <article class="feature-card">
+          <strong>03</strong>
+          <h3>Low-impact living</h3>
+          <p>Replace single-use waste with durable essentials designed for repeated, practical use.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="promo-strip">
+    <div class="container promo-inner">
+      <div>
+        <span class="eyebrow light">Starter bundle</span>
+        <h2>Make your kitchen and home greener in one simple switch.</h2>
+      </div>
+      <button class="primary alt" id="bundleBtn">Build my bundle</button>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <a class="logo" href="#">Naturals</a>
+        <p>Eco essentials for everyday living, made with natural materials and practical design.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Journal</a>
+        <a href="#">Shipping</a>
+        <a href="#">Support</a>
+      </div>
+      <div class="footer-meta">
+        <span>hello@naturals.co</span>
+        <span>© 2026 Naturals</span>
+      </div>
+    </div>
+  </footer>
+
+  <aside class="drawer" id="cart" hidden>
+    <div class="row"><h2>Your cart</h2><button class="link" data-close>Close</button></div>
+    <div id="cartItems"></div>
+    <div class="row total"><span>Total</span><b id="total">₹0</b></div>
+    <textarea id="address" placeholder="Delivery address"></textarea>
+    <button class="primary" id="checkout">Continue to checkout</button>
+    <p id="cartMsg" class="msg"></p>
+  </aside>
+
+  <div class="modal" id="authModal" hidden>
+    <div class="box">
+      <h2 id="authTitle">Log in</h2>
+      <input id="aName" placeholder="Full name" hidden>
+      <input id="aEmail" type="email" placeholder="Email">
+      <input id="aPass" type="password" placeholder="Password">
+      <button class="primary" id="authSubmit">Log in</button>
+      <button class="link" id="authSwitch">New here? Create an account</button>
+      <p id="authMsg" class="msg"></p>
+      <button class="link" data-close>Cancel</button>
+    </div>
+  </div>
+
+  <div class="modal" id="paymentModal" hidden>
+    <div class="box payment-box">
+      <h2>Checkout details</h2>
+      <form id="paymentForm">
+        <div class="form-row two-col">
+          <input id="payName" type="text" placeholder="Full name" required>
+          <input id="payPhone" type="tel" placeholder="Phone number" required>
+        </div>
+        <input id="payEmail" type="email" placeholder="Email address" required>
+        <textarea id="payAddress" rows="3" placeholder="Delivery address" required></textarea>
+
+        <section class="gateway-payment" aria-labelledby="gatewayPaymentTitle">
+          <div>
+            <h3 id="gatewayPaymentTitle">Payment option</h3>
+            <p>Choose how you want to complete this order and pay securely.</p>
+          </div>
+          <div class="payment-methods" aria-label="Payment method selector">
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="upi_qr" checked>
+              <span>UPI QR</span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="cod">
+              <span>Cash on delivery</span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="razorpay">
+              <span>Razorpay</span>
+            </label>
+          </div>
+          <div class="qr-merchant"><span>Paying to</span><strong id="qrMerchant">Naturals</strong></div>
+          <div class="qr-merchant"><span>Order reference</span><strong id="paymentReference">Not created</strong></div>
+          <img id="paymentQr" class="payment-qr" alt="Payment QR code" width="220" height="220" hidden>
+          <div class="gateway-total"><span>Order total</span><strong id="paymentAmount">₹0</strong></div>
+          <p id="paymentStatus" class="qr-status" role="status">Choose a payment method and continue.</p>
+        </section>
+
+        <button class="primary full" id="paymentSubmit" type="submit">Generate UPI QR</button>
+        <button class="primary full" id="checkQrPayment" type="button" hidden>I've paid, confirm order</button>
+        <button class="plain full" id="checkoutFallback" type="button" hidden>Pay with Razorpay Checkout instead</button>
+      </form>
+      <button class="link" data-close>Cancel</button>
+    </div>
+  </div>
+
+  <div class="modal" id="ordersModal" hidden>
+    <div class="box">
+      <h2>My orders</h2>
+      <div id="ordersList"></div>
+      <button class="link" data-close>Close</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="style.js"></script>
+</body>
+</html>
