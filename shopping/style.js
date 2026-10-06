@@ -430,11 +430,9 @@ $('paymentForm').addEventListener('submit', async event => {
       $('paymentQr').hidden = false;
       $('qrMerchant').textContent = checkoutOrder.businessName;
       const expiry = new Date(checkoutOrder.qr.expiresAt * 1000).toLocaleTimeString();
-      $('paymentStatus').textContent = selectedMethod === 'upi_qr'
-        ? `Scan with your UPI app. QR expires at ${expiry}. After paying, click below to confirm.`
-        : `Scan with your UPI app. QR expires at ${expiry}. After paying, click below to confirm.`;
+      $('paymentStatus').textContent = `Scan with your UPI app. QR expires at ${expiry}. After paying, click below to confirm.`;
       $('checkQrPayment').hidden = false;
-      $('checkoutFallback').hidden = selectedMethod !== 'razorpay';
+      $('checkoutFallback').hidden = false;
     } else {
       $('paymentStatus').textContent = checkoutOrder.qrMessage || 'A QR is unavailable. Continue with Razorpay Checkout.';
       $('checkoutFallback').hidden = false;

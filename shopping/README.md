@@ -27,9 +27,9 @@ The Pages version supports product browsing, filtering, searching, and a cart sa
 
 ## Deploy on Render
 
-This app includes a Render Blueprint in the repository root (`render.yaml`). Push the repository to GitHub, create a MongoDB Atlas database, then in Render choose **New → Blueprint** and connect the GitHub repository. Render will create the web service and generate `JWT_SECRET`; enter the Atlas connection string for `MONGODB_URI` when prompted. In Atlas, allow network access from Render (or temporarily allow `0.0.0.0/0`) and create a database user for the connection string.
+This app includes a Render Blueprint in the repository root (`render.yaml`). Create a MongoDB Atlas database and database user, then [deploy the Blueprint on Render](https://render.com/deploy?repo=https://github.com/Jeeva-110425/Online-Shopping-System-Naturals). Render will create the web service and generate `JWT_SECRET`; enter the Atlas connection string for `MONGODB_URI` when prompted. In Atlas, allow network access from Render (or temporarily allow `0.0.0.0/0`) and create a database user for the connection string.
 
-After deployment, Render provides the public HTTPS URL. Add Razorpay Test Mode credentials (`RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`) in the service's environment settings to enable Razorpay checkout. Set `RAZORPAY_WEBHOOK_SECRET` there as well if configuring the webhook. Never commit these values or put them in browser code. The free Render service may sleep when idle.
+After deployment, use the Render service's public HTTPS URL for the complete app; unlike the GitHub Pages preview, this server runs the API and serves the storefront on the same origin. Add Razorpay Test Mode credentials (`RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET`) in the service's environment settings to enable verified UPI QR payments and Razorpay Checkout. Set `RAZORPAY_WEBHOOK_SECRET` there as well if configuring the webhook. Never commit these values or put them in browser code. The free Render service may sleep when idle.
 
 ## API
 
@@ -42,7 +42,7 @@ After deployment, Render provides the public HTTPS URL. Add Razorpay Test Mode c
 - `GET /api/checkout/qr-status/:receipt` checks Razorpay for a captured QR payment.
 - `POST /api/razorpay/webhook` accepts signed `qr_code.credited` notifications.
 
-Checkout creates a single-use, fixed-amount UPI QR through Razorpay and displays the QR, Naturals store name, order total, and expiry. Razorpay supplies the actual QR image and merchant settlement details; this website does not construct payment QR data itself. Razorpay requires UPI QR activation for the merchant account. If QR creation is unavailable, the page offers Razorpay Standard Checkout as a fallback.
+Checkout creates a single-use, fixed-amount UPI QR through Razorpay and displays the QR, Naturals store name, order total, and expiry. Razorpay supplies the actual QR image and merchant settlement details; this website does not construct payment QR data itself. Both UPI QR and Razorpay Checkout require valid Razorpay API credentials on the server. Razorpay requires UPI QR activation for the merchant account. If QR creation is unavailable, the page offers Razorpay Standard Checkout as a fallback. Cash on delivery does not require Razorpay.
 
 For automatic order updates after the customer leaves the page, configure a Razorpay webhook in Dashboard → **Account & Settings → Webhooks**. Set its URL to `https://your-domain/api/razorpay/webhook`, subscribe to `qr_code.credited`, and place the webhook secret in `RAZORPAY_WEBHOOK_SECRET`. Localhost is not publicly reachable by Razorpay; use a deployed HTTPS URL or a secure development tunnel for webhook testing. The page also has a manual status check that asks Razorpay whether the QR payment was captured.
 

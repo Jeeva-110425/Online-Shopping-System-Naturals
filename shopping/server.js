@@ -85,13 +85,6 @@ function isValidRazorpaySignature(secret, payload, signature) {
   return received.length === expected.length && timingSafeEqual(expected, received);
 }
 
-function createUpiPaymentLink({ amount, orderId, merchantName, upiId }) {
-  const safeAmount = Number(amount || 0).toFixed(2);
-  const safeMerchantName = String(merchantName || 'Naturals').trim() || 'Naturals';
-  const safeUpiId = String(upiId || 'naturals@upi').trim() || 'naturals@upi';
-  return `upi://pay?pa=${encodeURIComponent(safeUpiId)}&pn=${encodeURIComponent(safeMerchantName)}&am=${safeAmount}&cu=INR&tn=${encodeURIComponent(`Order ${orderId}`)}`;
-}
-
 const replacementImages = {
   mixingBowls: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=900&q=80',
   rollingPin: 'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?auto=format&fit=crop&w=900&q=80'
@@ -151,6 +144,10 @@ app.post('/api/checkout/create-order', optionalAuth, async (req, res, next) => {
       quantities.set(item.id, quantity);
     }
 
+    if (!['cod', 'upi_qr', 'razorpay'].includes(selectedPaymentMethod)) {
+      return res.status(400).json({ message: 'Choose a supported payment method.' });
+    }
+
     const products = await Product.find({ _id: { $in: [...quantities.keys()] } }).lean();
     if (products.length !== quantities.size || products.some(product => product.stock < quantities.get(String(product._id)))) {
       return res.status(400).json({ message: 'One or more products are unavailable in the requested quantity.' });
@@ -195,43 +192,8 @@ app.post('/api/checkout/create-order', optionalAuth, async (req, res, next) => {
       });
     }
 
-    if (selectedPaymentMethod === 'upi_qr') {
-      const upiId = String(process.env.UPI_ID || 'naturals@upi').trim() || 'naturals@upi';
-      const upiLink = createUpiPaymentLink({
-        amount: total,
-        orderId: id,
-        merchantName: storeName,
-        upiId
-      });
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiLink)}`;
-      const order = await Order.create({
-        id,
-        userId: req.userId || null,
-        customer: customer.trim(),
-        email: String(email).trim().toLowerCase(),
-        phone: phone.trim(),
-        address: address.trim(),
-        paymentMethod: 'UPI QR',
-        status: 'UPI pending',
-        items: orderItems,
-        total
-      });
-      return res.status(201).json({
-        keyId: process.env.RAZORPAY_KEY_ID || 'demo',
-        razorpayOrderId: `upi-${id}`,
-        amount: amount,
-        currency: 'INR',
-        receipt: id,
-        businessName: storeName,
-        paymentMethod: 'upi_qr',
-        qr: { id: `upi-${id}`, imageUrl: qrUrl, expiresAt: Math.floor(Date.now() / 1000) + 3600, upiLink },
-        qrMessage: 'Scan the UPI QR and complete the payment in your bank or UPI app.',
-        status: order.status
-      });
-    }
-
     if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-      return res.status(503).json({ message: 'Razorpay is not configured. Add your API keys to the server .env file.' });
+      return res.status(503).json({ message: 'Online payment is not configured. Add your Razorpay Key ID and Key Secret to the server environment.' });
     }
 
     const { response: razorpayResponse, data: razorpayOrder } = await razorpayRequest('/orders', {
