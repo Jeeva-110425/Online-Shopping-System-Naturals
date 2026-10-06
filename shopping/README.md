@@ -19,6 +19,12 @@ npm start
 
 Open `http://localhost:3000`. The Express server serves the shopping page and its `/api` routes from the same origin.
 
+## Publish a GitHub Pages preview
+
+Every push to `main` that changes `shopping/` deploys a static preview through `.github/workflows/pages.yml`. After the workflow succeeds, open `https://jeeva-110425.github.io/Online-Shopping-System-Naturals/`. If Pages has not been enabled for the repository yet, select **Settings → Pages → Build and deployment → Source: GitHub Actions** and rerun the workflow.
+
+The Pages version supports product browsing, filtering, searching, and a cart saved in the visitor's browser. GitHub Pages cannot run this project's Express API, so sign-in, order history, and real checkout are unavailable in the preview. Deploy the Node.js server and database using the Render instructions below for the complete application.
+
 ## Deploy on Render
 
 This app includes a Render Blueprint in the repository root (`render.yaml`). Push the repository to GitHub, create a MongoDB Atlas database, then in Render choose **New → Blueprint** and connect the GitHub repository. Render will create the web service and generate `JWT_SECRET`; enter the Atlas connection string for `MONGODB_URI` when prompted. In Atlas, allow network access from Render (or temporarily allow `0.0.0.0/0`) and create a database user for the connection string.

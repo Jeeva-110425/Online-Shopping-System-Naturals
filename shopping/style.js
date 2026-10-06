@@ -1,4 +1,6 @@
 const $ = id => document.getElementById(id);
+const isGitHubPages = window.location.hostname.endsWith('.github.io')
+  || new URLSearchParams(window.location.search).has('github-pages-preview');
 
 const readStorage = (key, fallback) => {
   try {
@@ -260,6 +262,10 @@ $('cartBtn').onclick = () => {
 };
 
 $('authBtn').onclick = () => {
+  if (isGitHubPages) {
+    showToast('Sign-in needs the online server.');
+    return;
+  }
   if (localStorage.getItem('token')) {
     localStorage.removeItem('token');
     localStorage.removeItem('name');
@@ -294,6 +300,10 @@ $('authSubmit').onclick = async () => {
 $('checkout').onclick = () => {
   if (!Object.keys(cart).length) {
     $('cartMsg').textContent = 'Your cart is empty.';
+    return;
+  }
+  if (isGitHubPages) {
+    $('cartMsg').textContent = 'Checkout needs the online server. This GitHub Pages site is a preview.';
     return;
   }
   $('cartMsg').textContent = '';
@@ -482,10 +492,28 @@ $('ordersBtn').onclick = () => {
 renderFilters();
 renderCart();
 renderAuth();
-api('/products').then(data => {
-  products = data;
-  renderProducts();
-  renderCart();
-}).catch(error => {
-  $('grid').innerHTML = `<p class="empty-state">${error.message}</p>`;
-});
+if (isGitHubPages) {
+  $('deploymentNotice').hidden = false;
+  $('authBtn').textContent = 'Sign-in unavailable';
+  fetch('./products.json')
+    .then(response => {
+      if (!response.ok) throw new Error('Could not load the product catalogue.');
+      return response.json();
+    })
+    .then(data => {
+      products = data;
+      renderProducts();
+      renderCart();
+    })
+    .catch(error => {
+      $('grid').innerHTML = `<p class="empty-state">${error.message}</p>`;
+    });
+} else {
+  api('/products').then(data => {
+    products = data;
+    renderProducts();
+    renderCart();
+  }).catch(error => {
+    $('grid').innerHTML = `<p class="empty-state">${error.message}</p>`;
+  });
+}

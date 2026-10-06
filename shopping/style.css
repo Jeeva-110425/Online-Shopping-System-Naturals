@@ -65,6 +65,13 @@ img {
   border-bottom: 1px solid var(--line);
 }
 
+.deployment-notice {
+  padding: 12px 16px;
+  background: #fff3cd;
+  color: #533f03;
+  text-align: center;
+}
+
 .nav-shell {
   display: flex;
   align-items: center;

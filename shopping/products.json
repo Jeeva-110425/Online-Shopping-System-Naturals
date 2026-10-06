@@ -1,0 +1,101 @@
+[
+  {
+    "_id": "64a000000000000000000001",
+    "name": "Bamboo Storage Basket",
+    "category": "Household",
+    "tag": "Home storage",
+    "description": "Neatly stores vegetables, fruits, or daily essentials in any room.",
+    "price": 299,
+    "stock": 18,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1517705008128-361805f42e86?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    "_id": "64a000000000000000000002",
+    "name": "Jute Laundry Bin",
+    "category": "Household",
+    "tag": "Laundry",
+    "description": "A sturdy fabric bin for clothes, towels, and household sorting.",
+    "price": 349,
+    "stock": 16,
+    "rating": 4.7,
+    "image": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    "_id": "64a000000000000000000003",
+    "name": "Cotton Dish Towels",
+    "category": "Kitchen",
+    "tag": "Everyday use",
+    "description": "Soft absorbent towels ideal for drying utensils and kitchen counters.",
+    "price": 169,
+    "stock": 25,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    "_id": "64a000000000000000000004",
+    "name": "Cast Iron Pan",
+    "category": "Cooking",
+    "tag": "Essentials",
+    "description": "A durable pan for roasting vegetables, eggs, and quick home meals.",
+    "price": 899,
+    "stock": 10,
+    "rating": 4.9,
+    "image": "https://images.unsplash.com/photo-1528712306091-ed0763094c98?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    "_id": "64a000000000000000000005",
+    "name": "Mixing Bowl Set",
+    "category": "Kitchen",
+    "tag": "Cooking kit",
+    "description": "Stackable bowls for mixing, serving, and easy kitchen organization.",
+    "price": 499,
+    "stock": 13,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    "_id": "64a000000000000000000006",
+    "name": "Wooden Rolling Pin",
+    "category": "Cooking",
+    "tag": "Bakery",
+    "description": "A smooth wooden rolling pin made for chapati, dough, and simple prep.",
+    "price": 399,
+    "stock": 14,
+    "rating": 4.7,
+    "image": "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    "_id": "64a000000000000000000007",
+    "name": "Mixing Bowl Set",
+    "category": "Kitchen",
+    "tag": "Cooking kit",
+    "description": "Stackable bowls for mixing, serving, and easy kitchen organization.",
+    "price": 499,
+    "stock": 13,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1577308856961-8b3f43d7f9cd?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    "_id": "64a000000000000000000008",
+    "name": "Natural Coir Mat",
+    "category": "Household",
+    "tag": "Entryway",
+    "description": "A simple doormat that keeps mud and dust out of the home.",
+    "price": 459,
+    "stock": 11,
+    "rating": 4.6,
+    "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    "_id": "64a000000000000000000009",
+    "name": "Steel Spice Box",
+    "category": "Cooking",
+    "tag": "Kitchen tool",
+    "description": "Handy for storing everyday spices, herbs, and flavor essentials.",
+    "price": 259,
+    "stock": 20,
+    "rating": 4.8,
+    "image": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=900&q=80"
+  }
+]
