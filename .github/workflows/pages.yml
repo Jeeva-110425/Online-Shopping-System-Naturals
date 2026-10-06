@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "index.html"
       - "shopping/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
