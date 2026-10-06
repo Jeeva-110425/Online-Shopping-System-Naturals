@@ -12,12 +12,36 @@ const app = express();
 const port = Number(process.env.PORT) || 3000;
 const jwtSecret = process.env.JWT_SECRET;
 const storeName = String(process.env.STORE_NAME || 'Naturals').trim().slice(0, 40) || 'Naturals';
+const allowedOrigins = new Set([
+  'https://jeeva-110425.github.io',
+  process.env.FRONTEND_ORIGIN
+].filter(Boolean));
 
 if (!jwtSecret) {
   throw new Error('JWT_SECRET is required. Copy .env.example to .env and set a secret.');
 }
 
 app.use(helmet({ contentSecurityPolicy: false }));
+app.use((req, res, next) => {
+  const origin = req.get('origin');
+  if (origin && allowedOrigins.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  }
+
+  if (req.method === 'OPTIONS') {
+    return origin && !allowedOrigins.has(origin)
+      ? res.status(403).json({ message: 'This website is not allowed to access the store API.' })
+      : res.sendStatus(204);
+  }
+
+  if (origin && !allowedOrigins.has(origin)) {
+    return res.status(403).json({ message: 'This website is not allowed to access the store API.' });
+  }
+  next();
+});
 app.use(express.json({
   limit: '20kb',
   verify: (req, res, buffer) => { req.rawBody = Buffer.from(buffer); }
@@ -400,6 +424,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/index.html', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/style.css', (req, res) => res.sendFile(path.join(__dirname, 'style.css')));
 app.get('/style.js', (req, res) => res.sendFile(path.join(__dirname, 'style.js')));
+app.get('/api-config.js', (req, res) => res.sendFile(path.join(__dirname, 'api-config.js')));
 
 app.use((error, req, res, next) => {
   console.error(error);

@@ -1,6 +1,7 @@
 const $ = id => document.getElementById(id);
 const isGitHubPages = window.location.hostname.endsWith('.github.io')
   || new URLSearchParams(window.location.search).has('github-pages-preview');
+const apiBaseUrl = String(window.NATURALS_API_URL || '').replace(/\/+$/, '');
 
 const readStorage = (key, fallback) => {
   try {
@@ -196,11 +197,21 @@ const api = async (path, options = {}) => {
   const token = localStorage.getItem('token');
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const response = await fetch(`/api${path}`, {
-    ...options,
-    headers: { ...headers, ...options.headers },
-    body: options.body ? JSON.stringify(options.body) : undefined
-  });
+  let response;
+  try {
+    response = await fetch(`${apiBaseUrl}/api${path}`, {
+      ...options,
+      headers: { ...headers, ...options.headers },
+      body: options.body ? JSON.stringify(options.body) : undefined
+    });
+  } catch {
+    throw new Error(`The online store server at ${apiBaseUrl || window.location.origin} is unavailable. Please try again later.`);
+  }
+
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    throw new Error(`The online store server returned an unexpected response (HTTP ${response.status}). Check the API URL and Render deployment.`);
+  }
   const data = await response.json();
   if (!response.ok) throw new Error(data.message || 'Request failed.');
   return data;
@@ -262,10 +273,6 @@ $('cartBtn').onclick = () => {
 };
 
 $('authBtn').onclick = () => {
-  if (isGitHubPages) {
-    showToast('Sign-in needs the online server.');
-    return;
-  }
   if (localStorage.getItem('token')) {
     localStorage.removeItem('token');
     localStorage.removeItem('name');
@@ -300,10 +307,6 @@ $('authSubmit').onclick = async () => {
 $('checkout').onclick = () => {
   if (!Object.keys(cart).length) {
     $('cartMsg').textContent = 'Your cart is empty.';
-    return;
-  }
-  if (isGitHubPages) {
-    $('cartMsg').textContent = 'Checkout needs the online server. This GitHub Pages site is a preview.';
     return;
   }
   $('cartMsg').textContent = '';
@@ -454,8 +457,14 @@ $('checkQrPayment').onclick = async () => {
   if (!activePaymentOrder) return;
   const checkButton = $('checkQrPayment');
   checkButton.disabled = true;
-  $('paymentStatus').textContent = 'Confirming your order...';
+  $('paymentStatus').textContent = 'Checking payment status...';
   try {
+    const result = await api(`/checkout/qr-status/${encodeURIComponent(activePaymentOrder.receipt)}`);
+    if (result.status !== 'Paid') {
+      $('paymentStatus').textContent = `Payment status: ${result.status}. If you have just paid, wait a moment and check again.`;
+      return;
+    }
+
     cart = {};
     writeStorage('cart', cart);
     renderCart();
@@ -464,7 +473,7 @@ $('checkQrPayment').onclick = async () => {
     $('paymentForm').reset();
     $('cart').hidden = false;
     $('cartMsg').className = 'msg ok';
-    $('cartMsg').textContent = `Order confirmed. Reference: ${activePaymentOrder.receipt}`;
+    $('cartMsg').textContent = `Payment confirmed. Order: ${result.id}`;
     showToast('Order confirmed');
   } catch (error) {
     $('paymentStatus').textContent = error.message;
@@ -492,7 +501,6 @@ renderCart();
 renderAuth();
 if (isGitHubPages) {
   $('deploymentNotice').hidden = false;
-  $('authBtn').textContent = 'Sign-in unavailable';
   fetch('./products.json')
     .then(response => {
       if (!response.ok) throw new Error('Could not load the product catalogue.');

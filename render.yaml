@@ -12,3 +12,7 @@ services:
         generateValue: true
       - key: MONGODB_URI
         sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
